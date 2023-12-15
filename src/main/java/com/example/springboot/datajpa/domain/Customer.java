@@ -22,6 +22,9 @@ public class Customer implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    public Customer() {
+    }
+
     public Long getId() {
         return id;
     }

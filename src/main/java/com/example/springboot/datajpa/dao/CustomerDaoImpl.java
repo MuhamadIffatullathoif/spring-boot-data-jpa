@@ -18,4 +18,9 @@ public class CustomerDaoImpl implements CustomerDao{
     public List<Customer> findAll() {
         return entityManager.createQuery("from Customer").getResultList();
     }
+
+    @Override
+    public void save(Customer customer) {
+        entityManager.persist(customer);
+    }
 }
