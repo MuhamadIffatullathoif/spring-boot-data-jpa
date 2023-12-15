@@ -6,8 +6,8 @@
 </head>
 <body>
 <nav>
-    <a href="index">Index</a>
-    <a href="list">List</a>
+    <a href="/index">Index</a>
+    <a href="/list">List</a>
 </nav>
 <h1 th:text="${title}"></h1>
 <div>
@@ -51,7 +51,7 @@
             </td>
         </tr>
     </table>
-    <input type="hidden" th:field="*{id}">
+    <input type="hidden" th:field="*{id}" value="">
 </form>
 </body>
 </html>

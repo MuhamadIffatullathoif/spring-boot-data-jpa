@@ -7,4 +7,5 @@ import java.util.List;
 public interface CustomerDao {
     public List<Customer> findAll();
     public void save(Customer customer);
+    public Customer findOne(Long id);
 }
