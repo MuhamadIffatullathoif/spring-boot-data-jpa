@@ -2,9 +2,11 @@ package com.example.springboot.datajpa.controller;
 
 import com.example.springboot.datajpa.dao.CustomerDao;
 import com.example.springboot.datajpa.domain.Customer;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +36,11 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/form", method = RequestMethod.POST)
-    public String save(Customer customer) {
+    public String save(@Valid Customer customer, BindingResult result, Model model) {
+        if(result.hasErrors()) {
+            model.addAttribute("title", "Form of customer");
+            return "form";
+        }
         customerDao.save(customer);
         return "redirect:form";
     }
