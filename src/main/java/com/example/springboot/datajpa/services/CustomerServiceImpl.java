@@ -23,8 +23,8 @@ public class CustomerServiceImpl implements CustomerService {
     public void save(Customer customer) {
         customerDao.save(customer);
     }
-    @Transactional(readOnly = true)
 
+    @Transactional(readOnly = true)
     @Override
     public Customer findOne(Long id) {
         return customerDao.findOne(id);
