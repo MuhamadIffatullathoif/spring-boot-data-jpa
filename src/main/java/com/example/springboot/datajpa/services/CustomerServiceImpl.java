@@ -3,6 +3,8 @@ package com.example.springboot.datajpa.services;
 import com.example.springboot.datajpa.dao.CustomerDao;
 import com.example.springboot.datajpa.domain.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Customer> findAll() {
         return (List<Customer>) customerDao.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Page<Customer> findAll(Pageable pageable) {
+        return customerDao.findAll(pageable);
     }
 
     @Transactional

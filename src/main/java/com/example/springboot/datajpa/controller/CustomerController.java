@@ -4,6 +4,7 @@ import com.example.springboot.datajpa.domain.Customer;
 import com.example.springboot.datajpa.services.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,9 +22,13 @@ public class CustomerController {
     private CustomerService customerService;
 
     @GetMapping("list")
-    public String list(Model model) {
+    public String list(@RequestParam(value = "page", defaultValue = "0")int page, Model model) {
+        // implement paging and sorting
+        PageRequest pageRequest = PageRequest.of(page, 4);
+
         model.addAttribute("title", "List of customers");
-        model.addAttribute("customers", customerService.findAll());
+        model.addAttribute("customers", customerService.findAll(pageRequest));
+        // model.addAttribute("customers", customerService.findAll());
         return "list";
     }
 
