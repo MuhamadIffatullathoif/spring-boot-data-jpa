@@ -58,4 +58,12 @@ public class CustomerController {
         status.setComplete();
         return "redirect:list";
     }
+
+    @RequestMapping(value = "/delete/{id}")
+    public String delete(@PathVariable Long id){
+        if(id > 0) {
+            customerDao.delete(id);
+        }
+        return "redirect:/list";
+    }
 }

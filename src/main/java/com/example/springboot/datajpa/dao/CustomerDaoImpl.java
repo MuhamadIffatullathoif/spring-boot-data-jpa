@@ -19,19 +19,25 @@ public class CustomerDaoImpl implements CustomerDao{
         return entityManager.createQuery("from Customer").getResultList();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public void save(Customer customer) {
         if(customer.getId() != null && customer.getId() > 0) {
             entityManager.merge(customer);
-            entityManager.flush();
         } else {
             entityManager.persist(customer);
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Customer findOne(Long id) {
         return entityManager.find(Customer.class, id);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long id) {
+        entityManager.remove(findOne(id));
     }
 }
