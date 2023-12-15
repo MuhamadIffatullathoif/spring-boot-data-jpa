@@ -1,7 +1,7 @@
 package com.example.springboot.datajpa.controller;
 
-import com.example.springboot.datajpa.dao.CustomerDao;
 import com.example.springboot.datajpa.domain.Customer;
+import com.example.springboot.datajpa.services.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,19 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.Map;
-import java.util.Objects;
 
 @Controller
 @SessionAttributes("customer")
 public class CustomerController {
 
     @Autowired
-    private CustomerDao customerDao;
+    private CustomerService customerService;
 
     @GetMapping("list")
     public String list(Model model) {
         model.addAttribute("title", "List of customers");
-        model.addAttribute("customers", customerDao.findAll());
+        model.addAttribute("customers", customerService.findAll());
         return "list";
     }
 
@@ -39,7 +38,7 @@ public class CustomerController {
     public String update(@PathVariable("id") Long id, Map<String, Object> model) {
         Customer customer = null;
         if(id > 0) {
-            customer = customerDao.findOne(id);
+            customer = customerService.findOne(id);
         } else {
          return "redirect:/list";
         }
@@ -54,7 +53,7 @@ public class CustomerController {
             model.addAttribute("title", "Form of customer");
             return "form";
         }
-        customerDao.save(customer);
+        customerService.save(customer);
         status.setComplete();
         return "redirect:list";
     }
@@ -62,7 +61,7 @@ public class CustomerController {
     @RequestMapping(value = "/delete/{id}")
     public String delete(@PathVariable Long id){
         if(id > 0) {
-            customerDao.delete(id);
+            customerService.delete(id);
         }
         return "redirect:/list";
     }

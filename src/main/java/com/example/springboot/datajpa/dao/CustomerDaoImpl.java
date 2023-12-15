@@ -13,13 +13,11 @@ public class CustomerDaoImpl implements CustomerDao{
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional(readOnly = true)
     @Override
     public List<Customer> findAll() {
         return entityManager.createQuery("from Customer").getResultList();
     }
 
-    @Transactional
     @Override
     public void save(Customer customer) {
         if(customer.getId() != null && customer.getId() > 0) {
@@ -29,13 +27,11 @@ public class CustomerDaoImpl implements CustomerDao{
         }
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Customer findOne(Long id) {
         return entityManager.find(Customer.class, id);
     }
 
-    @Transactional
     @Override
     public void delete(Long id) {
         entityManager.remove(findOne(id));
