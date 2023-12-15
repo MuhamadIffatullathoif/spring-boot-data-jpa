@@ -10,6 +10,11 @@
     <a href="list">List</a>
 </nav>
 <h1 th:text="${title}"></h1>
+<div>
+    <ul th:object="${customer}" th:remove="tag">
+        <li th:each="err: ${#fields.errors()}" th:text="${err}"></li>
+    </ul>
+</div>
 <form th:action="@{/form}" th:object="${customer}" method="post">
     <table>
         <tr>
