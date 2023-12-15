@@ -19,6 +19,7 @@ public class CustomerDaoImpl implements CustomerDao{
         return entityManager.createQuery("from Customer").getResultList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public void save(Customer customer) {
         entityManager.persist(customer);

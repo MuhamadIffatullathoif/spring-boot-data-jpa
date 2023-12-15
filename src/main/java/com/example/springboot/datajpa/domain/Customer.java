@@ -25,6 +25,11 @@ public class Customer implements Serializable {
     public Customer() {
     }
 
+    @PrePersist
+    public void prePersist(){
+        createdAt = new Date();
+    }
+
     public Long getId() {
         return id;
     }
