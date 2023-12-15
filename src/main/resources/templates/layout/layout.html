@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <title th:text="'Spring Boot: MVC + Thymeleaf + Data JPA - ' + ${title}"></title>
+</head>
+<body>
+<header th:fragment="header">
+    <nav>
+        <a href="index">Index</a>
+        <a href="list">List</a>
+        <a href="form">Create Customer</a>
+    </nav>
+</header>
+<div></div>
+<footer th:fragment="footer">
+    <hr>
+    <p>Powered by spring boot + Thymeleaf + Data JPA + MySQL</p>
+</footer>
+</body>
+</html>

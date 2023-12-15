@@ -1,15 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${title}"></title>
-</head>
+<head th:replace="layout/layout::head"></head>
 <body>
-<nav>
-    <a href="index">Index</a>
-    <a href="list">List</a>
-    <a href="form">Create Customer</a>
-</nav>
+<header th:replace="layout/layout::header"></header>
 <h1 th:text="${title}"></h1>
 <table>
     <thead>
@@ -39,5 +32,6 @@
         </tr>
     </tbody>
 </table>
+<footer th:replace="layout/layout::footer"></footer>
 </body>
 </html>

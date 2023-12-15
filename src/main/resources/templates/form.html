@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${title}"></title>
-</head>
+<head th:replace="layout/layout::head"></head>
 <body>
-<nav>
-    <a href="/index">Index</a>
-    <a href="/list">List</a>
-</nav>
+<header th:replace="layout/layout::header"></header>
 <h1 th:text="${title}"></h1>
 <div>
     <ul th:object="${customer}" th:remove="tag">
@@ -53,5 +47,6 @@
     </table>
     <input type="hidden" th:field="*{id}" value="">
 </form>
+<footer th:replace="layout/layout::footer"></footer>
 </body>
 </html>
