@@ -15,7 +15,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(readOnly = true)
     @Override
     public List<Customer> findAll() {
-        return customerDao.findAll();
+        return (List<Customer>) customerDao.findAll();
     }
 
     @Transactional
@@ -27,12 +27,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(readOnly = true)
     @Override
     public Customer findOne(Long id) {
-        return customerDao.findOne(id);
+        return customerDao.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
     public void delete(Long id) {
-        customerDao.delete(id);
+        customerDao.deleteById(id);
     }
 }

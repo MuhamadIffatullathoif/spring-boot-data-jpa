@@ -1,12 +1,7 @@
 package com.example.springboot.datajpa.dao;
 
 import com.example.springboot.datajpa.domain.Customer;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
-
-public interface CustomerDao {
-    public List<Customer> findAll();
-    public void save(Customer customer);
-    public Customer findOne(Long id);
-    public void delete(Long id);
+public interface CustomerDao extends CrudRepository<Customer, Long> {
 }
