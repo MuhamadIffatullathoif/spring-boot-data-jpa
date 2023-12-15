@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
@@ -48,12 +49,13 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/form", method = RequestMethod.POST)
-    public String save(@Valid Customer customer, BindingResult result, Model model, SessionStatus status) {
+    public String save(@Valid Customer customer, BindingResult result, Model model, SessionStatus status, RedirectAttributes flash) {
         if(result.hasErrors()) {
             model.addAttribute("title", "Form of customer");
             return "form";
         }
         customerService.save(customer);
+        flash.addFlashAttribute("success", "Customer saved successfully");
         status.setComplete();
         return "redirect:list";
     }
