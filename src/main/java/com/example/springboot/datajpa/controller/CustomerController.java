@@ -20,6 +20,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -35,10 +36,11 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+    private final static String UPLOADS_FOLDER = "uploads";
 
     @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<Resource> verPhoto(@PathVariable String filename) {
-        Path path = Paths.get("uploads").resolve(filename).toAbsolutePath();
+        Path path = Paths.get(UPLOADS_FOLDER).resolve(filename).toAbsolutePath();
         Resource resource = null;
         try {
             resource = new UrlResource(path.toUri());
@@ -49,9 +51,10 @@ public class CustomerController {
             throw new RuntimeException(e);
         }
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() +"\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
+
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable("id") Long id, Map<String, Object> model, RedirectAttributes flash) {
         Customer customer = customerService.findOne(id);
@@ -109,6 +112,19 @@ public class CustomerController {
         }
 
         if (!photo.isEmpty()) {
+            // delete photo when upload again
+            if(customer.getId() != null && customer.getId() > 0 && customer.getPhoto() != null && customer.getPhoto().length() > 0) {
+                Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(customer.getPhoto()).toAbsolutePath();
+                File archive = rootPath.toFile();
+
+                if (archive.exists() && archive.canRead()) {
+                    boolean isDelete = archive.delete();
+                    if (isDelete) {
+                        System.out.println("Success Delete Photo" + customer.getPhoto());
+                    }
+                }
+            }
+
             // Path resourceDirectory = Paths.get("src//main//resources//static//uploads");
             // String rootPath = resourceDirectory.toFile().getAbsolutePath();
 
@@ -117,7 +133,7 @@ public class CustomerController {
 
             // absolute and external directory
             String uniqueFilename = UUID.randomUUID().toString() + "_" + photo.getOriginalFilename();
-            Path rootPath = Paths.get("uploads").resolve(uniqueFilename);
+            Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(uniqueFilename);
             Path rootAbsolutePath = rootPath.toAbsolutePath();
             try {
                 // byte[] photoBytes = photo.getBytes();
@@ -142,7 +158,19 @@ public class CustomerController {
     @RequestMapping(value = "/delete/{id}")
     public String delete(@PathVariable Long id) {
         if (id > 0) {
+            // get data for deleting image
+            Customer customer = customerService.findOne(id);
             customerService.delete(id);
+
+            Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(customer.getPhoto()).toAbsolutePath();
+            File archive = rootPath.toFile();
+
+            if (archive.exists() && archive.canRead()) {
+                boolean isDelete = archive.delete();
+                if (isDelete) {
+                    System.out.println("Success Delete Photo" + customer.getPhoto());
+                }
+            }
         }
         return "redirect:/list";
     }
