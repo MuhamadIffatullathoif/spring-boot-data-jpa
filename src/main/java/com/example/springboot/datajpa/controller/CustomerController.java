@@ -29,6 +29,18 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @GetMapping("/ver/{id}")
+    public String ver(@PathVariable("id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+        Customer customer = customerService.findOne(id);
+        if (customer == null) {
+            flash.addFlashAttribute("error", "customer id not found");
+            return "redirect:/list";
+        }
+        model.put("customer", customer);
+        model.put("title", "Detail Customer: " + customer.getName());
+        return "ver";
+    }
+
     @GetMapping("/list")
     public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model) {
         // implement paging and sorting
