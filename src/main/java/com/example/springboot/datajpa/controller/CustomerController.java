@@ -21,6 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 @Controller
 @SessionAttributes("customer")
@@ -90,13 +92,22 @@ public class CustomerController {
             // String rootPath = resourceDirectory.toFile().getAbsolutePath();
 
             // external uploads
-            String rootPath = "C://Temp//uploads";
+            // String rootPath = "C://Temp//uploads";
+
+            // absolute and external directory
+            String uniqueFilename = UUID.randomUUID().toString() + "_" + photo.getOriginalFilename();
+            Path rootPath = Paths.get("uploads").resolve(uniqueFilename);
+            Path rootAbsolutePath = rootPath.toAbsolutePath();
             try {
-                byte[] photoBytes = photo.getBytes();
-                Path fullRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
-                Files.write(fullRoute, photoBytes);
-                flash.addFlashAttribute("success", "Success upload'" + photo.getOriginalFilename() + "'");
-                customer.setPhoto(photo.getOriginalFilename());
+                // byte[] photoBytes = photo.getBytes();
+                // Path fullRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
+                // Files.write(fullRoute, photoBytes);
+
+                // absolute and external directory
+                Files.copy(photo.getInputStream(), rootAbsolutePath);
+                // flash.addFlashAttribute("success", "Success upload'" + photo.getOriginalFilename() + "'");
+                flash.addFlashAttribute("success", "Success upload'" + uniqueFilename + "'");
+                customer.setPhoto(uniqueFilename);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
