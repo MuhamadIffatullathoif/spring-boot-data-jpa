@@ -5,9 +5,13 @@ import com.example.springboot.datajpa.services.CustomerService;
 import com.example.springboot.datajpa.util.paginator.PageRender;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +36,22 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @GetMapping("/uploads/{filename:.+}")
+    public ResponseEntity<Resource> verPhoto(@PathVariable String filename) {
+        Path path = Paths.get("uploads").resolve(filename).toAbsolutePath();
+        Resource resource = null;
+        try {
+            resource = new UrlResource(path.toUri());
+            if (!resource.exists() && !resource.isReadable()) {
+                throw new RuntimeException("Error cannot load image");
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() +"\"")
+                .body(resource);
+    }
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable("id") Long id, Map<String, Object> model, RedirectAttributes flash) {
         Customer customer = customerService.findOne(id);

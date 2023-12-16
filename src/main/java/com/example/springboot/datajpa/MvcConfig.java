@@ -15,10 +15,12 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
         // registry.addResourceHandler("/uploads/**")
-                // .addResourceLocations("file:/C:/Temp/uploads/");
-        String resourcePath = Paths.get("uploads").toAbsolutePath().toUri().toString();
-        logger.info("resourcePath: {}", resourcePath);
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations(resourcePath);
+        //        .addResourceLocations("file:/C:/Temp/uploads/");
+
+        // comment this use load image by HTTP Response
+        // String resourcePath = Paths.get("uploads").toAbsolutePath().toUri().toString();
+        // logger.info("resourcePath: {}", resourcePath);
+        // registry.addResourceHandler("/uploads/**")
+        //        .addResourceLocations(resourcePath);
     }
 }
