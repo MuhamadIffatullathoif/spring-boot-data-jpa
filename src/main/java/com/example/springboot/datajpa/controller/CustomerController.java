@@ -2,11 +2,11 @@ package com.example.springboot.datajpa.controller;
 
 import com.example.springboot.datajpa.domain.Customer;
 import com.example.springboot.datajpa.services.CustomerService;
+import com.example.springboot.datajpa.services.UploadFileService;
 import com.example.springboot.datajpa.util.paginator.PageRender;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,15 +20,9 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 
 @Controller
 @SessionAttributes("customer")
@@ -36,17 +30,27 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private UploadFileService uploadFileService;
     private final static String UPLOADS_FOLDER = "uploads";
 
     @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<Resource> verPhoto(@PathVariable String filename) {
-        Path path = Paths.get(UPLOADS_FOLDER).resolve(filename).toAbsolutePath();
+        // comment this to use service UploadFile
+        // Path path = Paths.get(UPLOADS_FOLDER).resolve(filename).toAbsolutePath();
+        // Resource resource = null;
+        // try {
+        //    resource = new UrlResource(path.toUri());
+        //    if (!resource.exists() && !resource.isReadable()) {
+        //        throw new RuntimeException("Error cannot load image");
+        //    }
+        //} catch (MalformedURLException e) {
+        //    throw new RuntimeException(e);
+        //}
         Resource resource = null;
         try {
-            resource = new UrlResource(path.toUri());
-            if (!resource.exists() && !resource.isReadable()) {
-                throw new RuntimeException("Error cannot load image");
-            }
+            // load image use service
+            resource = uploadFileService.load(filename);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -113,16 +117,18 @@ public class CustomerController {
 
         if (!photo.isEmpty()) {
             // delete photo when upload again
-            if(customer.getId() != null && customer.getId() > 0 && customer.getPhoto() != null && customer.getPhoto().length() > 0) {
-                Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(customer.getPhoto()).toAbsolutePath();
-                File archive = rootPath.toFile();
-
-                if (archive.exists() && archive.canRead()) {
-                    boolean isDelete = archive.delete();
-                    if (isDelete) {
-                        System.out.println("Success Delete Photo" + customer.getPhoto());
-                    }
-                }
+            if (customer.getId() != null && customer.getId() > 0 && customer.getPhoto() != null && customer.getPhoto().length() > 0) {
+//                Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(customer.getPhoto()).toAbsolutePath();
+//                File archive = rootPath.toFile();
+//
+//                if (archive.exists() && archive.canRead()) {
+//                    boolean isDelete = archive.delete();
+//                    if (isDelete) {
+//                        System.out.println("Success Delete Photo" + customer.getPhoto());
+//                    }
+//                }
+                // delete image use service
+                uploadFileService.delete(customer.getPhoto());
             }
 
             // Path resourceDirectory = Paths.get("src//main//resources//static//uploads");
@@ -132,22 +138,32 @@ public class CustomerController {
             // String rootPath = "C://Temp//uploads";
 
             // absolute and external directory
-            String uniqueFilename = UUID.randomUUID().toString() + "_" + photo.getOriginalFilename();
-            Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(uniqueFilename);
-            Path rootAbsolutePath = rootPath.toAbsolutePath();
-            try {
-                // byte[] photoBytes = photo.getBytes();
-                // Path fullRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
-                // Files.write(fullRoute, photoBytes);
+//            String uniqueFilename = UUID.randomUUID().toString() + "_" + photo.getOriginalFilename();
+//            Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(uniqueFilename);
+//            Path rootAbsolutePath = rootPath.toAbsolutePath();
+//            try {
+//                // byte[] photoBytes = photo.getBytes();
+//                // Path fullRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
+//                // Files.write(fullRoute, photoBytes);
+//
+//                // absolute and external directory
+//                Files.copy(photo.getInputStream(), rootAbsolutePath);
+//                // flash.addFlashAttribute("success", "Success upload'" + photo.getOriginalFilename() + "'");
+//                flash.addFlashAttribute("success", "Success upload'" + uniqueFilename + "'");
+//                customer.setPhoto(uniqueFilename);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
 
-                // absolute and external directory
-                Files.copy(photo.getInputStream(), rootAbsolutePath);
-                // flash.addFlashAttribute("success", "Success upload'" + photo.getOriginalFilename() + "'");
-                flash.addFlashAttribute("success", "Success upload'" + uniqueFilename + "'");
-                customer.setPhoto(uniqueFilename);
+            // copy image to folder uploads use service
+            String uniqueFilename = null;
+            try {
+                uniqueFilename = uploadFileService.copy(photo);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            flash.addFlashAttribute("success", "Success upload'" + uniqueFilename + "'");
+            customer.setPhoto(uniqueFilename);
         }
         customerService.save(customer);
         flash.addFlashAttribute("success", "Customer saved successfully");
@@ -161,15 +177,8 @@ public class CustomerController {
             // get data for deleting image
             Customer customer = customerService.findOne(id);
             customerService.delete(id);
-
-            Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(customer.getPhoto()).toAbsolutePath();
-            File archive = rootPath.toFile();
-
-            if (archive.exists() && archive.canRead()) {
-                boolean isDelete = archive.delete();
-                if (isDelete) {
-                    System.out.println("Success Delete Photo" + customer.getPhoto());
-                }
+            if (uploadFileService.delete(customer.getPhoto())) {
+                System.out.println("Success Delete Photo" + customer.getPhoto());
             }
         }
         return "redirect:/list";
