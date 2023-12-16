@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PageItem {
-    private int name;
+    private int number;
     private boolean current;
 
-    public PageItem(int name, boolean current) {
-        this.name = name;
+    public PageItem(int number, boolean current) {
+        this.number = number;
         this.current = current;
     }
 
-    public int getName() {
-        return name;
+    public int getNumber() {
+        return number;
     }
 
     public boolean isCurrent() {

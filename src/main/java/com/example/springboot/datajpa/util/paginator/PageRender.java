@@ -17,7 +17,7 @@ public class PageRender<T> {
         this.url = url;
         this.page = page;
         this.pages = new ArrayList<PageItem>();
-        totalElementPage = page.getSize();
+        totalElementPage = 6;
         totalPage = page.getTotalPages();
         currentPage = page.getNumber() + 1;
         int from, until;
@@ -29,7 +29,7 @@ public class PageRender<T> {
                 from = 1;
                 until = totalElementPage;
             } else if (currentPage >= totalPage - totalElementPage / 2) {
-                from = totalPage - totalElementPage;
+                from = totalPage - totalElementPage + 1;
                 until = totalElementPage;
             } else {
                 from = currentPage - totalElementPage / 2;
@@ -38,8 +38,12 @@ public class PageRender<T> {
         }
 
         for (int i = 0; i < until; i++) {
-            pages.add(new PageItem(until + i, currentPage == from + i));
+            pages.add(new PageItem(from + i, currentPage == from + i));
         }
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public int getTotalPage() {

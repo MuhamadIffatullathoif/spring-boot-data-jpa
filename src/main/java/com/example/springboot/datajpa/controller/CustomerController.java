@@ -2,9 +2,12 @@ package com.example.springboot.datajpa.controller;
 
 import com.example.springboot.datajpa.domain.Customer;
 import com.example.springboot.datajpa.services.CustomerService;
+import com.example.springboot.datajpa.util.paginator.PageRender;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,13 +24,18 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping("list")
+    @GetMapping("/list")
     public String list(@RequestParam(value = "page", defaultValue = "0")int page, Model model) {
         // implement paging and sorting
-        PageRequest pageRequest = PageRequest.of(page, 4);
+        Pageable pageRequest = PageRequest.of(page, 4);
 
+        // implement Paginator custom
+        Page<Customer> customers = customerService.findAll(pageRequest);
+        PageRender<Customer> pageRender = new PageRender<Customer>("/list", customers);
         model.addAttribute("title", "List of customers");
-        model.addAttribute("customers", customerService.findAll(pageRequest));
+        model.addAttribute("customers", customers);
+        model.addAttribute("page", pageRender);
+        // model.addAttribute("customers", customerService.findAll(pageRequest));
         // model.addAttribute("customers", customerService.findAll());
         return "list";
     }
