@@ -86,8 +86,11 @@ public class CustomerController {
         }
 
         if (!photo.isEmpty()) {
-            Path resourceDirectory = Paths.get("src//main//resources//static//uploads");
-            String rootPath = resourceDirectory.toFile().getAbsolutePath();
+            // Path resourceDirectory = Paths.get("src//main//resources//static//uploads");
+            // String rootPath = resourceDirectory.toFile().getAbsolutePath();
+
+            // external uploads
+            String rootPath = "C://Temp//uploads";
             try {
                 byte[] photoBytes = photo.getBytes();
                 Path fullRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
