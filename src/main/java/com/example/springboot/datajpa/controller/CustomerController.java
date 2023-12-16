@@ -13,8 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 @Controller
@@ -25,7 +30,7 @@ public class CustomerController {
     private CustomerService customerService;
 
     @GetMapping("/list")
-    public String list(@RequestParam(value = "page", defaultValue = "0")int page, Model model) {
+    public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model) {
         // implement paging and sorting
         Pageable pageRequest = PageRequest.of(page, 4);
 
@@ -51,21 +56,35 @@ public class CustomerController {
     @RequestMapping(value = "/form/{id}")
     public String update(@PathVariable("id") Long id, Map<String, Object> model) {
         Customer customer = null;
-        if(id > 0) {
+        if (id > 0) {
             customer = customerService.findOne(id);
         } else {
-         return "redirect:/list";
+            return "redirect:/list";
         }
-        model.put("title","Edit Customer");
+        model.put("title", "Edit Customer");
         model.put("customer", customer);
         return "form";
     }
 
     @RequestMapping(value = "/form", method = RequestMethod.POST)
-    public String save(@Valid Customer customer, BindingResult result, Model model, SessionStatus status, RedirectAttributes flash) {
-        if(result.hasErrors()) {
+    public String save(@Valid Customer customer, BindingResult result, Model model, @RequestParam("file") MultipartFile photo, SessionStatus status, RedirectAttributes flash) {
+        if (result.hasErrors()) {
             model.addAttribute("title", "Form of customer");
             return "form";
+        }
+
+        if (!photo.isEmpty()) {
+            Path resourceDirectory = Paths.get("src//main//resources//static//uploads");
+            String rootPath = resourceDirectory.toFile().getAbsolutePath();
+            try {
+                byte[] photoBytes = photo.getBytes();
+                Path fullRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
+                Files.write(fullRoute, photoBytes);
+                flash.addFlashAttribute("success", "Success upload'" + photo.getOriginalFilename() + "'");
+                customer.setPhoto(photo.getOriginalFilename());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         customerService.save(customer);
         flash.addFlashAttribute("success", "Customer saved successfully");
@@ -74,8 +93,8 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/delete/{id}")
-    public String delete(@PathVariable Long id){
-        if(id > 0) {
+    public String delete(@PathVariable Long id) {
+        if (id > 0) {
             customerService.delete(id);
         }
         return "redirect:/list";
