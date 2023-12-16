@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout::head"></head>
+<body>
+<header th:replace="layout/layout::header"></header>
+<h1 th:text="${title}"></h1>
+<div>
+    <img th:if="${#strings.length(customer.photo) > 0}" style="max-width: 25%" th:src="@{'/uploads/' + ${customer.getPhoto()}}" th:alt="${customer.photo}">
+    <ul>
+        <li th:text="${customer.name}"></li>
+        <li th:text="${customer.lastName}"></li>
+        <li th:text="${customer.email}"></li>
+        <li th:text="${customer.createdAt}"></li>
+    </ul>
+</div>
+<footer th:replace="layout/layout::footer"></footer>
+</body>
+</html>
