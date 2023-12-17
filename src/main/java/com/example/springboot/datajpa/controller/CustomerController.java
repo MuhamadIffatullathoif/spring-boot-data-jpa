@@ -61,7 +61,7 @@ public class CustomerController {
 
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable("id") Long id, Map<String, Object> model, RedirectAttributes flash) {
-        Customer customer = customerService.findOne(id);
+        Customer customer = customerService.fetchByIdWithInvoice(id);
         if (customer == null) {
             flash.addFlashAttribute("error", "customer id not found");
             return "redirect:/list";

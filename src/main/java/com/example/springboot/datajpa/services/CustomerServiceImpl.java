@@ -50,6 +50,12 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDao.findById(id).orElse(null);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Customer fetchByIdWithInvoice(Long id) {
+        return customerDao.fetchByIdWithInvoice(id);
+    }
+
     @Transactional
     @Override
     public void delete(Long id) {
@@ -79,5 +85,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(readOnly = true)
     public Invoice findInvoiceById(Long id) {
         return invoiceDao.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        invoiceDao.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Invoice fetchByIdWithCustomerWithItemInvoiceWithProduct(Long id) {
+        return invoiceDao.fetchByIdWithCustomerWithItemInvoiceWithProduct(id);
     }
 }

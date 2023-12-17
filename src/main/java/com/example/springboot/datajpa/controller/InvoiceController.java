@@ -27,7 +27,7 @@ public class InvoiceController {
 
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
-        Invoice invoice = customerService.findInvoiceById(id);
+        Invoice invoice = customerService.fetchByIdWithCustomerWithItemInvoiceWithProduct(id);
         if(invoice == null) {
             flash.addFlashAttribute("error", "Invoice not exists");
             return "redirect:/list";
@@ -86,5 +86,18 @@ public class InvoiceController {
         status.setComplete();
         flash.addFlashAttribute("Success","Success save invoice");
         return "redirect:/ver/" + invoice.getCustomer().getId();
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+        Invoice invoice = customerService.findInvoiceById(id);
+
+        if(invoice != null) {
+            customerService.deleteById(id);
+            flash.addFlashAttribute("success", "Delete invoice successfully");
+            return "redirect:/ver/" + invoice.getCustomer().getId();
+        }
+        flash.addFlashAttribute("error", "Invoice not exists");
+        return "redirect:/list";
     }
 }

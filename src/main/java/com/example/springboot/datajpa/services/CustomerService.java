@@ -13,9 +13,12 @@ public interface CustomerService {
     public Page<Customer> findAll(Pageable pageable);
     public void save(Customer customer);
     public Customer findOne(Long id);
+    public Customer fetchByIdWithInvoice(Long id);
     public void delete(Long id);
     public List<Product> findByName(String term);
     public void saveInvoice(Invoice invoice);
     public Product findProductById(Long id);
     public Invoice findInvoiceById(Long id);
+    public void deleteById(Long id);
+    public Invoice fetchByIdWithCustomerWithItemInvoiceWithProduct(Long id);
 }

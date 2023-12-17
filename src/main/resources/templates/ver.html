@@ -24,6 +24,7 @@
                 <th>Date</th>
                 <th>Total</th>
                 <th>Ver</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -34,6 +35,9 @@
                 <td th:text="${invoice.total}"></td>
                 <td>
                     <a th:href="@{'/invoice/ver/' + ${invoice.id}}" th:text="'Detail'"></a>
+                </td>
+                <td>
+                    <a th:href="@{'/invoice/delete/' + ${invoice.id}}" th:text="'Delete'"></a>
                 </td>
             </tr>
         </tbody>
