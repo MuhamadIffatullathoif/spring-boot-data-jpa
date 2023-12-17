@@ -1,8 +1,10 @@
 package com.example.springboot.datajpa.services;
 
 import com.example.springboot.datajpa.dao.CustomerDao;
+import com.example.springboot.datajpa.dao.InvoiceDao;
 import com.example.springboot.datajpa.dao.ProductDao;
 import com.example.springboot.datajpa.domain.Customer;
+import com.example.springboot.datajpa.domain.Invoice;
 import com.example.springboot.datajpa.domain.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,8 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerDao customerDao;
     @Autowired
     private ProductDao productDao;
+    @Autowired
+    private InvoiceDao invoiceDao;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional(readOnly = true)
@@ -53,8 +57,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Product> findByName(String term) {
         // return productDao.findByName(term);
         return productDao.findByNameLikeIgnoreCase("%" + term + "%");
+    }
+
+    @Override
+    @Transactional
+    public void saveInvoice(Invoice invoice) {
+        invoiceDao.save(invoice);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.springboot.datajpa.services;
 
 import com.example.springboot.datajpa.domain.Customer;
+import com.example.springboot.datajpa.domain.Invoice;
 import com.example.springboot.datajpa.domain.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,4 +15,5 @@ public interface CustomerService {
     public Customer findOne(Long id);
     public void delete(Long id);
     public List<Product> findByName(String term);
+    public void saveInvoice(Invoice invoice);
 }
