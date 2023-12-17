@@ -68,4 +68,10 @@ public class CustomerServiceImpl implements CustomerService {
     public void saveInvoice(Invoice invoice) {
         invoiceDao.save(invoice);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Product findProductById(Long id) {
+        return productDao.findById(id).orElse(null);
+    }
 }

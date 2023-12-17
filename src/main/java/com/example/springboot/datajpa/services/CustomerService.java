@@ -16,4 +16,5 @@ public interface CustomerService {
     public void delete(Long id);
     public List<Product> findByName(String term);
     public void saveInvoice(Invoice invoice);
+    public Product findProductById(Long id);
 }
