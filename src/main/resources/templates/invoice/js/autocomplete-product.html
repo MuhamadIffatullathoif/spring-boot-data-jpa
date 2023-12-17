@@ -13,7 +13,7 @@
                         term: request.term
                     },
                     success: function (data) {
-                        response($.map(data,function (item) {
+                        response($.map(data, function (item) {
                             return {
                                 value: item.id,
                                 label: item.name,
@@ -25,6 +25,10 @@
             },
             select: function (event, ui) {
                 // $("#search-product").val(ui.item.label);
+                if (itemHelper.hasProduct(ui.item.value)) {
+                    itemHelper.incrementAmount(ui.item.value, ui.item.price);
+                    return false;
+                }
                 var line = $("#templateItemsInvoice").html();
                 line = line.replace(/{ID}/g, ui.item.value);
                 line = line.replace(/{NAME}/g, ui.item.label);
@@ -38,7 +42,24 @@
 
     var itemHelper = {
         calculateAmount: function (id, price, amount) {
-            $("#total_amount_" +id).html(parseInt(price) * parseInt(amount));
+            $("#total_amount_" + id).html(parseInt(price) * parseInt(amount));
+        },
+        hasProduct: function (id) {
+            var result = false;
+            $('input[name="item_id[]"]').each(function () {
+                if (parseInt(id) == parseInt($(this).val())) {
+                    result = true;
+                }
+            });
+            return result;
+        },
+        incrementAmount: function (id, price) {
+            var amount = $("#amount_" + id).val() ? parseInt($("#amount_" + id).val()) : 0;
+            $("#amount_" + id).val(++amount);
+            this.calculateAmount(id, price, amount);
+        },
+        deleteLineInvoice: function (id) {
+            $("#row_" + id).remove();
         }
     }
 </script>
