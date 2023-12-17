@@ -19,6 +19,28 @@
         <li th:text="'Description: ' + ${invoice.description}"></li>
         <li th:text="'Date: ' + ${invoice.createdAt}"></li>
     </ul>
+    <div th:if="${#lists.isEmpty(invoice.items)}" th:text="'No Line item exists ' + ${invoice.description}"></div>
+    <table th:if="${not #lists.isEmpty(invoice.items)}">
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Amount</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="line:${invoice.items}">
+            <td th:text="${line.product.name}"></td>
+            <td th:text="${line.product.price}"></td>
+            <td th:text="${line.amount}"></td>
+            <td th:text="${line.calculateAmount()}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h5> Grand Total
+        <span th:text="${invoice.total}"></span>
+    </h5>
 </div>
 <footer th:replace="layout/layout::footer"></footer>
 </body>
