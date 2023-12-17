@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout::head"></head>
 <body>
-
+<header th:replace="layout/layout::header"></header>
+<h1 th:text="${title}"></h1>
+<form th:action="@{/invoice/form/}" th:object="${invoice}" method="post">
+    <div>
+        <label th:text="'Customer'"></label>
+        <div>
+            <input th:value="${invoice.customer.name}" disabled>
+        </div>
+    </div>
+    <div>
+        <label th:text="'Description'"></label>
+        <div>
+            <input type="text" th:field="*{description}">
+        </div>
+    </div>
+    <div>
+        <label th:text="'Observation'"></label>
+        <div>
+            <input type="text" th:field="*{observation}">
+        </div>
+    </div>
+    <input type="submit" th:value="${title}">
+</form>
+<footer th:replace="layout/layout::footer"></footer>
 </body>
 </html>
