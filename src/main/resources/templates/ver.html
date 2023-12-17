@@ -23,6 +23,7 @@
                 <th>Description</th>
                 <th>Date</th>
                 <th>Total</th>
+                <th>Ver</th>
             </tr>
         </thead>
         <tbody>
@@ -31,6 +32,9 @@
                 <td th:text="${invoice.description}"></td>
                 <td th:text="${invoice.createdAt}"></td>
                 <td th:text="${invoice.total}"></td>
+                <td>
+                    <a th:href="@{'/invoice/ver/' + ${invoice.id}}" th:text="'Detail'"></a>
+                </td>
             </tr>
         </tbody>
     </table>

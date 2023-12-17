@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout::head"></head>
+<body>
+<header th:replace="layout/layout::header"></header>
+<h1 th:text="${title}"></h1>
+<div>
+    <h4>
+        <a th:href="@{'/ver/'} + ${invoice.customer.id}">&laquo; back</a>
+    </h4>
+    <ul>
+        <li th:text="'Data Customer'"></li>
+        <li th:text="${invoice.customer}"></li>
+        <li th:text="${invoice.customer.email}"></li>
+    </ul>
+    <ul>
+        <li th:text="'Data Invoice'"></li>
+        <li th:text="'Invoice ID: ' + ${invoice.id}"></li>
+        <li th:text="'Description: ' + ${invoice.description}"></li>
+        <li th:text="'Date: ' + ${invoice.createdAt}"></li>
+    </ul>
+</div>
+<footer th:replace="layout/layout::footer"></footer>
+</body>
+</html>
