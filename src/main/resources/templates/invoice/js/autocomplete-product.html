@@ -43,6 +43,7 @@
     var itemHelper = {
         calculateAmount: function (id, price, amount) {
             $("#total_amount_" + id).html(parseInt(price) * parseInt(amount));
+            this.calculateGrandTotal();
         },
         hasProduct: function (id) {
             var result = false;
@@ -60,6 +61,14 @@
         },
         deleteLineInvoice: function (id) {
             $("#row_" + id).remove();
+            this.calculateGrandTotal();
+        },
+        calculateGrandTotal: function () {
+            var total = 0;
+            $('span[id^="total_amount_"]').each(function () {
+                total += parseInt($(this).html());
+            });
+            $("#grand-total").html(total);
         }
     }
 </script>
