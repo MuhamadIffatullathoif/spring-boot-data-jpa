@@ -30,10 +30,17 @@
                 line = line.replace(/{NAME}/g, ui.item.label);
                 line = line.replace(/{PRICE}/g, ui.item.price);
                 $("#loadItemProducts").append(line);
+                itemHelper.calculateAmount(ui.item.value, ui.item.price, 1);
                 return false;
             }
         })
-    })
+    });
+
+    var itemHelper = {
+        calculateAmount: function (id, price, amount) {
+            $("#total_amount_" +id).html(parseInt(price) * parseInt(amount));
+        }
+    }
 </script>
 </body>
 </html>
