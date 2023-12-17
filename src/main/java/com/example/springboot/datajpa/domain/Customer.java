@@ -8,7 +8,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "customers")
@@ -31,10 +33,15 @@ public class Customer implements Serializable {
     private Date createdAt;
 
     private String photo;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Invoice> invoices;
+
     @Serial
     private static final long serialVersionUID = 1L;
 
     public Customer() {
+        invoices = new ArrayList<Invoice>();
     }
 
 //    @PrePersist
@@ -84,6 +91,18 @@ public class Customer implements Serializable {
 
     public String getPhoto() {
         return photo;
+    }
+
+    public List<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(List<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+
+    public void addInvoice(Invoice invoice) {
+        invoices.add(invoice);
     }
 
     public void setPhoto(String photo) {

@@ -12,6 +12,25 @@
         <li th:text="${customer.email}"></li>
         <li th:text="${customer.createdAt}"></li>
     </ul>
+    <div th:if="${#lists.isEmpty(customer.invoices)}" th:text="'There are no invoices assigned to customer ' +${customer.name} + ' ' + ${customer.lastName}"></div>
+    <table th:if="${not #lists.isEmpty(customer.invoices)}">
+        <thead>
+            <tr>
+                <th>Invoice ID</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="invoice:${customer.invoices}">
+                <td th:text="${invoice.id}"></td>
+                <td th:text="${invoice.description}"></td>
+                <td th:text="${invoice.createdAt}"></td>
+                <td th:text="${invoice.total}"></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <footer th:replace="layout/layout::footer"></footer>
 </body>
