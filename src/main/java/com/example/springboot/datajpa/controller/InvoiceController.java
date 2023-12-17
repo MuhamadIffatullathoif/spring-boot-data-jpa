@@ -2,15 +2,14 @@ package com.example.springboot.datajpa.controller;
 
 import com.example.springboot.datajpa.domain.Customer;
 import com.example.springboot.datajpa.domain.Invoice;
+import com.example.springboot.datajpa.domain.Product;
 import com.example.springboot.datajpa.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -33,5 +32,10 @@ public class InvoiceController {
         model.put("invoice", invoice);
         model.put("title", "Create Invoice");
         return "invoice/form";
+    }
+
+    @GetMapping(value = "/upload-products/{term}", produces = {"application/json"})
+    public @ResponseBody List<Product> uploadProduct(@PathVariable String term) {
+        return customerService.findByName(term);
     }
 }
