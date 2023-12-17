@@ -24,7 +24,12 @@
                 })
             },
             select: function (event, ui) {
-                $("#search-product").val(ui.item.label);
+                // $("#search-product").val(ui.item.label);
+                var line = $("#templateItemsInvoice").html();
+                line = line.replace(/{ID}/g, ui.item.value);
+                line = line.replace(/{NAME}/g, ui.item.label);
+                line = line.replace(/{PRICE}/g, ui.item.price);
+                $("#loadItemProducts").append(line);
                 return false;
             }
         })

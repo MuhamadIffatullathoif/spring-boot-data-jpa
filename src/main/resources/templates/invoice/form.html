@@ -33,6 +33,18 @@
         </div>
     </div>
     <table th:replace="invoice/template-items::itemsInvoice"></table>
+    <table id="loadItemProducts">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
     <input type="submit" th:value="${title}">
 </form>
 <footer th:replace="layout/layout::footer"></footer>
