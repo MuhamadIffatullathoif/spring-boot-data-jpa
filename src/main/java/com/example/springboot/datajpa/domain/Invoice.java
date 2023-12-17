@@ -29,6 +29,7 @@ public class Invoice implements Serializable {
     @JoinColumn(name = "invoice_id")
     private List<ItemInvoice> items;
 
+
     public Invoice() {
         this.items = new ArrayList<ItemInvoice>();
     }

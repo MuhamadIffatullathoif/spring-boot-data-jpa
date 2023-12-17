@@ -2,11 +2,13 @@ package com.example.springboot.datajpa.controller;
 
 import com.example.springboot.datajpa.domain.Customer;
 import com.example.springboot.datajpa.domain.Invoice;
+import com.example.springboot.datajpa.domain.ItemInvoice;
 import com.example.springboot.datajpa.domain.Product;
 import com.example.springboot.datajpa.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -37,5 +39,25 @@ public class InvoiceController {
     @GetMapping(value = "/upload-products/{term}", produces = {"application/json"})
     public @ResponseBody List<Product> uploadProduct(@PathVariable String term) {
         return customerService.findByName(term);
+    }
+
+    @PostMapping("/form")
+    public String save(Invoice invoice,
+                       @RequestParam(name = "item_id[]", required = false) Long[] itemId,
+                       @RequestParam(name = "amount[]", required = false) Integer[] amount,
+                       RedirectAttributes flash,
+                       SessionStatus status) {
+        for (int i = 0; i < itemId.length; i++) {
+            Product product = customerService.findProductById(itemId[i]);
+
+            ItemInvoice itemInvoice = new ItemInvoice();
+            itemInvoice.setAmount(amount[i]);
+            itemInvoice.setProduct(product);
+            invoice.addItem(itemInvoice);
+        }
+        customerService.saveInvoice(invoice);
+        status.setComplete();
+        flash.addFlashAttribute("Success","Success save invoice");
+        return "redirect:/ver/" + invoice.getCustomer().getId();
     }
 }

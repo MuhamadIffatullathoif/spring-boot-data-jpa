@@ -38,6 +38,11 @@
                 return false;
             }
         })
+
+        $("form").submit(function () {
+            $("#templateItemsInvoice").remove();
+            return;
+        })
     });
 
     var itemHelper = {
