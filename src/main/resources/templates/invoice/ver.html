@@ -41,6 +41,13 @@
     <h5> Grand Total
         <span th:text="${invoice.total}"></span>
     </h5>
+    <div>
+        <div>Observations</div>
+        <div>
+            <p th:text="${invoice.observation}" th:if="${not #strings.isEmpty(invoice.observation)}"></p>
+            <h4 th:if="${#strings.isEmpty(invoice.observation)}" th:text="'Has no observation'"></h4>
+        </div>
+    </div>
 </div>
 <footer th:replace="layout/layout::footer"></footer>
 </body>
