@@ -32,6 +32,7 @@
             <input type="text" name="search-product" id="search-product">
         </div>
     </div>
+    <table th:replace="invoice/template-items::itemsInvoice"></table>
     <input type="submit" th:value="${title}">
 </form>
 <footer th:replace="layout/layout::footer"></footer>
