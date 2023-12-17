@@ -26,8 +26,15 @@
             <input type="text" th:field="*{observation}">
         </div>
     </div>
+    <div>
+        <label for="search-product" th:text="'Search Product'"></label>
+        <div>
+            <input type="text" name="search-product" id="search-product" th:field="*{observation}">
+        </div>
+    </div>
     <input type="submit" th:value="${title}">
 </form>
 <footer th:replace="layout/layout::footer"></footer>
+<script th:replace="invoice/js/autocomplete-product::javascript"></script>
 </body>
 </html>
