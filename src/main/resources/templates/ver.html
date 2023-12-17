@@ -5,6 +5,9 @@
 <header th:replace="layout/layout::header"></header>
 <h1 th:text="${title}"></h1>
 <div>
+    <h4>
+        <a th:href="@{/invoice/form/} + ${customer.id}" th:text="'Create Invoice'"></a>
+    </h4>
     <img th:if="${#strings.length(customer.photo) > 0}" style="max-width: 25%" th:src="@{'/uploads/' + ${customer.getPhoto()}}" th:alt="${customer.photo}">
     <ul>
         <li th:text="${customer.name}"></li>

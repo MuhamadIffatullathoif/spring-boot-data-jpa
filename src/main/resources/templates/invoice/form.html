@@ -4,6 +4,9 @@
 <body>
 <header th:replace="layout/layout::header"></header>
 <h1 th:text="${title}"></h1>
+<h4>
+    <a th:href="@{/ver/} + ${invoice.customer.id}" th:text="'Back'"></a>
+</h4>
 <form th:action="@{/invoice/form/}" th:object="${invoice}" method="post">
     <div>
         <label th:text="'Customer'"></label>

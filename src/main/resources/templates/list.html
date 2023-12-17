@@ -12,6 +12,7 @@
             <th>Lastname</th>
             <th>Email</th>
             <th>Date</th>
+            <th>Create Invoice</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -25,6 +26,9 @@
             <td th:text="${customer.lastName}"></td>
             <td th:text="${customer.email}"></td>
             <td th:text="${customer.createdAt}"></td>
+            <td>
+                <a th:href="@{/invoice/form/}+${customer.id}" th:text="'Create invoice'"></a>
+            </td>
             <td>
                 <a th:href="@{/form/}+${customer.id}" th:text="'Edit'"></a>
             </td>
