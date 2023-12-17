@@ -25,6 +25,18 @@ public class InvoiceController {
     @Autowired
     private CustomerService customerService;
 
+    @GetMapping("/ver/{id}")
+    public String ver(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
+        Invoice invoice = customerService.findInvoiceById(id);
+        if(invoice == null) {
+            flash.addFlashAttribute("error", "Invoice not exists");
+            return "redirect:/list";
+        }
+        model.addAttribute("invoice", invoice);
+        model.addAttribute("title", "Invoice : ".concat(invoice.getDescription()));
+        return "invoice/ver";
+    }
+
     @GetMapping("/form/{customerId}")
     public String create(@PathVariable(value = "customerId") Long customerId, Map<String, Object> model, RedirectAttributes flash) {
         Customer customer = customerService.findOne(customerId);

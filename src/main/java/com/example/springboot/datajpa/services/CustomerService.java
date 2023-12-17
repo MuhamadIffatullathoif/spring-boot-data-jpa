@@ -17,4 +17,5 @@ public interface CustomerService {
     public List<Product> findByName(String term);
     public void saveInvoice(Invoice invoice);
     public Product findProductById(Long id);
+    public Invoice findInvoiceById(Long id);
 }
