@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -19,21 +20,18 @@ public class SpringSecurityConfig {
 
     @Autowired
     private LoginSuccessHandler successHandler;
-
-    @Bean
-    public static BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Bean
     public UserDetailsService userDetailsService() throws Exception {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         manager.createUser(User
                 .withUsername("Jhon")
-                .password(passwordEncoder().encode("12345")).roles("USER").build());
+                .password(passwordEncoder.encode("12345")).roles("USER").build());
         manager.createUser(User
                 .withUsername("admin")
-                .password(passwordEncoder().encode("admin"))
+                .password(passwordEncoder.encode("admin"))
                 .roles("ADMIN", "USER")
                 .build());
         return manager;
