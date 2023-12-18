@@ -4,6 +4,7 @@ import com.example.springboot.datajpa.domain.Customer;
 import com.example.springboot.datajpa.services.CustomerService;
 import com.example.springboot.datajpa.services.UploadFileService;
 import com.example.springboot.datajpa.util.paginator.PageRender;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -81,7 +83,7 @@ public class CustomerController {
     }
 
     @GetMapping({"/list", "/"})
-    public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model, Authentication authentication) {
+    public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model, Authentication authentication, HttpServletRequest request) {
         if (authentication != null) {
             logger.info("Hello authenticated user, your username is".concat(authentication.getName()));
         }
@@ -95,6 +97,19 @@ public class CustomerController {
             logger.info("HALO".concat(auth.getName()).concat("you have access"));
         } else {
             logger.info("HALO".concat(auth.getName()).concat("you dont have access"));
+        }
+
+        SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "");
+        if(securityContext.isUserInRole("ROLE_ADMIN")) {
+            logger.info("HALO FROM : SecurityContextHolderAwareRequestWrapper".concat(auth.getName()).concat("you have access"));
+        } else {
+            logger.info("HALO FROM: SecurityContextHolderAwareRequestWrapper".concat(auth.getName()).concat("you dont have access"));
+        }
+
+        if(request.isUserInRole("ROLE_ADMIN")) {
+            logger.info("HALO FROM : HttpServletRequest".concat(auth.getName()).concat("you have access"));
+        } else {
+            logger.info("HALO FROM: HttpServletRequest".concat(auth.getName()).concat("you dont have access"));
         }
         // implement paging and sorting
         Pageable pageRequest = PageRequest.of(page, 4);
