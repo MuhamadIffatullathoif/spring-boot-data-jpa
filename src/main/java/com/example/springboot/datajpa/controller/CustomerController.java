@@ -71,7 +71,7 @@ public class CustomerController {
         return "ver";
     }
 
-    @GetMapping("/list")
+    @GetMapping({"/list", "/"})
     public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model) {
         // implement paging and sorting
         Pageable pageRequest = PageRequest.of(page, 4);

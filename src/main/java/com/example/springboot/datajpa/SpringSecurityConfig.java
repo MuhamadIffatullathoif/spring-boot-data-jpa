@@ -46,7 +46,7 @@ public class SpringSecurityConfig {
                                 .requestMatchers("/delete/**").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated();
                     });
-            httpSecurity.formLogin(AbstractAuthenticationFilterConfigurer::permitAll);
+            httpSecurity.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.loginPage("/login").permitAll());
             httpSecurity.logout(LogoutConfigurer::permitAll);
             return httpSecurity.build();
         } catch (Exception e) {
