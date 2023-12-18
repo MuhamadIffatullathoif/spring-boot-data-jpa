@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout::head"></head>
+<body>
+<header th:replace="layout/layout::header"></header>
+<div class="container py-4">
+    <div>Please Sign in</div>
+    <div>
+        <form>
+            <div>
+                <input type="text" name="username" id="username" placeholder="Username" autofocus required>
+            </div>
+            <div>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+            </div>
+            <div>
+                <input type="submit" value="Sign in">
+            </div>
+        </form>
+    </div>
+    <footer th:replace="layout/layout::footer"></footer>
+</div>
+</body>
+</html>
