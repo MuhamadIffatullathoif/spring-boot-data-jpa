@@ -15,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,6 +47,7 @@ public class CustomerController {
     private final static String UPLOADS_FOLDER = "uploads";
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Secured("ROLE_USER")
     @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<Resource> verPhoto(@PathVariable String filename) {
         // comment this to use service UploadFile
@@ -70,6 +73,7 @@ public class CustomerController {
                 .body(resource);
     }
 
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable("id") Long id, Map<String, Object> model, RedirectAttributes flash) {
         Customer customer = customerService.fetchByIdWithInvoice(id);
@@ -82,6 +86,7 @@ public class CustomerController {
         return "ver";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     @GetMapping({"/list", "/"})
     public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model, Authentication authentication, HttpServletRequest request) {
         if (authentication != null) {
@@ -125,6 +130,7 @@ public class CustomerController {
         return "list";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/form")
     public String create(Map<String, Object> model) {
         Customer customer = new Customer();

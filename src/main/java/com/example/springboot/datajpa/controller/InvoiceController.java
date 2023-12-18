@@ -7,6 +7,7 @@ import com.example.springboot.datajpa.domain.Product;
 import com.example.springboot.datajpa.services.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/invoice")
 @SessionAttributes("invoice")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class InvoiceController {
 
     @Autowired

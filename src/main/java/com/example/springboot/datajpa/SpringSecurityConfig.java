@@ -4,6 +4,7 @@ import com.example.springboot.datajpa.auth.handler.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.User;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
 public class SpringSecurityConfig {
 
@@ -43,9 +45,9 @@ public class SpringSecurityConfig {
             httpSecurity
                     .authorizeHttpRequests(request -> {
                         request.requestMatchers("/", "/css/**", "/js/**", "/images/**", "/list/**").permitAll()
-                                .requestMatchers("/uploads/**").hasAnyRole("USER")
-                                .requestMatchers("/ver/**").hasAnyRole("USER")
-                                .requestMatchers("/invoice/**").hasAnyRole("ADMIN")
+                                // .requestMatchers("/uploads/**").hasAnyRole("USER")
+                                // .requestMatchers("/ver/**").hasAnyRole("USER")
+                                // .requestMatchers("/invoice/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/form/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/delete/**").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated();
