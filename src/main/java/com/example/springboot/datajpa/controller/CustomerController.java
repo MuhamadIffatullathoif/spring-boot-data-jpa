@@ -5,6 +5,8 @@ import com.example.springboot.datajpa.services.CustomerService;
 import com.example.springboot.datajpa.services.UploadFileService;
 import com.example.springboot.datajpa.util.paginator.PageRender;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.Map;
 
 @Controller
@@ -33,6 +41,7 @@ public class CustomerController {
     @Autowired
     private UploadFileService uploadFileService;
     private final static String UPLOADS_FOLDER = "uploads";
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<Resource> verPhoto(@PathVariable String filename) {
@@ -72,7 +81,21 @@ public class CustomerController {
     }
 
     @GetMapping({"/list", "/"})
-    public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model) {
+    public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model, Authentication authentication) {
+        if (authentication != null) {
+            logger.info("Hello authenticated user, your username is".concat(authentication.getName()));
+        }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            logger.info("FROM : (SecurityContextHolder.getContext().getAuthentication()) -> Hello authenticated user, your username is".concat(auth.getName()));
+        }
+
+        if (hasRole("ROLE_ADMIN")) {
+            logger.info("HALO".concat(auth.getName()).concat("you have access"));
+        } else {
+            logger.info("HALO".concat(auth.getName()).concat("you dont have access"));
+        }
         // implement paging and sorting
         Pageable pageRequest = PageRequest.of(page, 4);
 
@@ -182,5 +205,29 @@ public class CustomerController {
             }
         }
         return "redirect:/list";
+    }
+
+    private boolean hasRole(String role) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        if (context == null) {
+            return false;
+        }
+
+        Authentication authentication = context.getAuthentication();
+
+        if (authentication == null) {
+            return false;
+        }
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        return authorities.contains(new SimpleGrantedAuthority(role));
+//        for (GrantedAuthority authority : authorities) {
+//            if (role.equals(authority.getAuthority())) {
+//                logger.info("HALO".concat(authentication.getName()).concat("you have access").concat("ROLE: ".concat(authority.getAuthority())));
+//                return true;
+//            }
+//        }
+
+//        return false;
     }
 }

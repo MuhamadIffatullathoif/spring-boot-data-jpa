@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout::head"></head>
+<body>
+<header th:replace="layout/layout::header"></header>
+<div class="container py-4">
+    <div>
+        <div>
+            <div>Error: Access Denied</div>
+            <div>
+                <h5 >Sorry
+                    <span th:text="${#authentication.name}"></span>
+                    You do not have permissions to access this resource
+                </h5>
+                <a th:href="@{/list}">Go to start</a>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="layout/layout::footer"></footer>
+</div>
+</body>
+</html>

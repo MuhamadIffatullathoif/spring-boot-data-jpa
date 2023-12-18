@@ -1,9 +1,10 @@
 package com.example.springboot.datajpa;
 
+import com.example.springboot.datajpa.auth.handler.LoginSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,6 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SpringSecurityConfig {
+
+    @Autowired
+    private LoginSuccessHandler successHandler;
 
     @Bean
     public static BCryptPasswordEncoder passwordEncoder() {
@@ -46,8 +50,13 @@ public class SpringSecurityConfig {
                                 .requestMatchers("/delete/**").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated();
                     });
-            httpSecurity.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.loginPage("/login").permitAll());
+            httpSecurity.formLogin(login -> login
+                    .successHandler(successHandler)
+                    .loginPage("/login")
+                    .permitAll());
             httpSecurity.logout(LogoutConfigurer::permitAll);
+            httpSecurity.exceptionHandling(exception -> exception
+                    .accessDeniedPage("/error_403"));
             return httpSecurity.build();
         } catch (Exception e) {
             throw new RuntimeException(e);

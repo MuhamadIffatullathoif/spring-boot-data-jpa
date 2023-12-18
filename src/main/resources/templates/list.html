@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout::head"></head>
 <body>
 <header th:replace="layout/layout::header"></header>
@@ -8,37 +8,37 @@
         <div class="card-header" th:text="${title}"></div>
         <div class="card-body">
             <h4 class="card-title">
-                <a class="btn btn-primary" th:href="@{/form}">Create Customer</a>
+                <a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary" th:href="@{/form}">Create Customer</a>
             </h4>
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>ID</th>
+                    <th sec:authorize="hasRole('ROLE_USER')">ID</th>
                     <th>Name</th>
                     <th>Lastname</th>
                     <th>Email</th>
                     <th>Date</th>
-                    <th>Create Invoice</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')">Create Invoice</th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')">Edit</th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')">Delete</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="customer:${customers}">
-                    <td>
+                    <td sec:authorize="hasRole('ROLE_USER')">
                         <a class="btn btn-primary btn-xs" th:href="@{'/ver/'+ ${customer.id}}" th:text="${customer.id}"></a>
                     </td>
                     <td th:text="${customer.name}"></td>
                     <td th:text="${customer.lastName}"></td>
                     <td th:text="${customer.email}"></td>
                     <td th:text="${customer.createdAt}"></td>
-                    <td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')">
                         <a class="btn btn-success btn-sm" th:href="@{/invoice/form/}+${customer.id}" th:text="'Create invoice'"></a>
                     </td>
-                    <td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')">
                         <a class="btn btn-primary btn-sm" th:href="@{/form/}+${customer.id}" th:text="'Edit'"></a>
                     </td>
-                    <td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')">
                         <a class="btn btn-danger btn-sm" th:href="@{/delete/}+${customer.id}" th:text="'Delete'"></a>
                     </td>
                 </tr>
