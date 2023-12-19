@@ -4,6 +4,8 @@ import com.example.springboot.datajpa.auth.handler.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
@@ -14,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
+
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
 public class SpringSecurityConfig {
@@ -22,20 +26,34 @@ public class SpringSecurityConfig {
     private LoginSuccessHandler successHandler;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    DataSource dataSource;
+
+//    @Bean
+//    public UserDetailsService userDetailsService() throws Exception {
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        manager.createUser(User
+//                .withUsername("Jhon")
+//                .password(passwordEncoder.encode("12345")).roles("USER").build());
+//        manager.createUser(User
+//                .withUsername("admin")
+//                .password(passwordEncoder.encode("admin"))
+//                .roles("ADMIN", "USER")
+//                .build());
+//        return manager;
+//    }
 
     @Bean
-    public UserDetailsService userDetailsService() throws Exception {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User
-                .withUsername("Jhon")
-                .password(passwordEncoder.encode("12345")).roles("USER").build());
-        manager.createUser(User
-                .withUsername("admin")
-                .password(passwordEncoder.encode("admin"))
-                .roles("ADMIN", "USER")
-                .build());
-        return manager;
+    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
+                .jdbcAuthentication()
+                .dataSource(dataSource)
+                .passwordEncoder(passwordEncoder)
+                .usersByUsernameQuery("select username, password, enabled from users where username=?")
+                .authoritiesByUsernameQuery("select u.username, a.authority from authorities a inner join users u on(a.user_id=u.id) where u.username=?")
+                .and().build();
     }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
