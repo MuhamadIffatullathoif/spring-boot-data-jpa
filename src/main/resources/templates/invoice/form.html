@@ -3,54 +3,75 @@
 <head th:replace="layout/layout::head"></head>
 <body>
 <header th:replace="layout/layout::header"></header>
-<h1 th:text="${title}"></h1>
-<h4>
-    <a th:href="@{/ver/} + ${invoice.customer.id}" th:text="'Back'"></a>
-</h4>
-<form th:action="@{/invoice/form}" th:object="${invoice}" method="post">
-    <div>
-        <label th:text="'Customer'"></label>
-        <div>
-            <input th:value="${invoice.customer.name}" disabled>
+<div class="container py-4">
+    <div class="card bg-light">
+        <div class="card-header" th:text="${title}"></div>
+        <div class="card-body">
+            <h4 class="card-title">
+                <a class="btn btn-light btn-xs" th:href="@{/ver/} + ${invoice.customer.id}" th:text="'&laquo; Back'"></a>
+            </h4>
+            <form th:action="@{/invoice/form}" th:object="${invoice}" method="post">
+                <div class="form-group row">
+                    <label for="customer" class="col-sm-2 col-form-label"
+                           th:text="'Customer'"></label>
+                    <div class="col-sm-6">
+                        <input name="customer" id="customer"
+                               th:value="${invoice.customer.name} + ' ' + ${invoice.customer.lastName}"
+                               class="form-control" disabled='disabled' />
+                    </div>
+                </div>
+                <div class="form-group row mt-2">
+                    <label for="description" class="col-sm-2 col-form-label"
+                           th:text="'Description'"></label>
+                    <div class="col-sm-6">
+                        <input id="description" type="text" th:field="*{description}" class="form-control" th:errorclass="'form-control is-invalid'" />
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                    </div>
+                </div>
+                <div class="form-group row mt-2">
+                    <label for="observation" class="col-sm-2 col-form-label"
+                           th:text="'Observation'"></label>
+                    <div class="col-sm-6">
+                        <textarea id="observation" th:field="*{observation}" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row mt-2">
+                    <label for="search-product" class="col-sm-2 col-form-label"
+                           th:text="'Search Product'"></label>
+                    <div class="col-sm-6">
+                        <input type="text" name="search-product" id="search-product"
+                               class="form-control" />
+                    </div>
+                </div>
+                <table th:replace="invoice/template-items::itemsInvoice"></table>
+                <table id="loadItemProducts" class="table table-sm table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Amount</th>
+                        <th>Total</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <h5> Total
+                    <span class="badge badge-secondary" id="grand-total">0</span>
+                </h5>
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input type="submit" th:value="${title}"
+                               class="btn btn-secondary" />
+                    </div>
+                </div>
+            </form>
         </div>
+
     </div>
-    <div>
-        <label th:text="'Description'"></label>
-        <div>
-            <input type="text" th:field="*{description}">
-            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
-        </div>
-    </div>
-    <div>
-        <label th:text="'Observation'"></label>
-        <div>
-            <input type="text" th:field="*{observation}">
-        </div>
-    </div>
-    <div>
-        <label for="search-product" th:text="'Search Product'"></label>
-        <div>
-            <input type="text" name="search-product" id="search-product">
-        </div>
-    </div>
-    <table th:replace="invoice/template-items::itemsInvoice"></table>
-    <table id="loadItemProducts">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Amount</th>
-                <th>Total</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <h5> Total
-        <span id="grand-total">0</span>
-    </h5>
-    <input type="submit" th:value="${title}">
-</form>
+
+</div>
+
 <footer th:replace="layout/layout::footer"></footer>
 <script th:replace="invoice/js/autocomplete-product::javascript"></script>
 </body>
