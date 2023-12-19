@@ -28,3 +28,10 @@ INSERT INTO invoices_items(amount, invoice_id, product_id) VALUES(1,1,7);
 INSERT INTO invoices_items(amount, invoice_id, product_id) VALUES(1,1,5);
 INSERT INTO invoices(description,observation,customer_id,created_at) VALUES ("Invoice Bicycle", "Some important note", 1, NOW());
 INSERT INTO invoices_items(amount, invoice_id, product_id) VALUES(3,2,5);
+
+/* Create Data User */
+INSERT Into Users(username,password,enabled) VALUES ('andres','$2a$10$nwsX/Iu2BRfGjnn23yLQLO/cHWbr2dyzlNR6ajgWmc5KvrEt3jgCS',1);
+INSERT Into Users(username,password,enabled) VALUES ('admin','$2a$10$Ik2ploR6mqvhFp4SULA4t.vUtc.QJHudjQvNhGt7dlxLan2gypBta',1);
+INSERT INTO Authorities(user_id, authority) VALUES(1,'ROLE_USER');
+INSERT INTO Authorities(user_id, authority) VALUES(2,'ROLE_USER');
+INSERT INTO Authorities(user_id, authority) VALUES(2,'ROLE_ADMIN');

@@ -1,19 +1,15 @@
 package com.example.springboot.datajpa;
 
 import com.example.springboot.datajpa.auth.handler.LoginSuccessHandler;
+import com.example.springboot.datajpa.services.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
@@ -28,6 +24,8 @@ public class SpringSecurityConfig {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     DataSource dataSource;
+    @Autowired
+    private JpaUserDetailsService userDetailsService;
 
 //    @Bean
 //    public UserDetailsService userDetailsService() throws Exception {
@@ -43,18 +41,22 @@ public class SpringSecurityConfig {
 //        return manager;
 //    }
 
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
-                .jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(passwordEncoder)
-                .usersByUsernameQuery("select username, password, enabled from users where username=?")
-                .authoritiesByUsernameQuery("select u.username, a.authority from authorities a inner join users u on(a.user_id=u.id) where u.username=?")
-                .and().build();
+//    @Bean
+//    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
+//        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
+//                .jdbcAuthentication()
+//                .dataSource(dataSource)
+//                .passwordEncoder(passwordEncoder)
+//                .usersByUsernameQuery("select username, password, enabled from users where username=?")
+//                .authoritiesByUsernameQuery("select u.username, a.authority from authorities a inner join users u on(a.user_id=u.id) where u.username=?")
+//                .and().build();
+//    }
+
+    @Autowired
+    public void userDetailsService(AuthenticationManagerBuilder build) throws Exception {
+        build.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder);
     }
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
         try {
