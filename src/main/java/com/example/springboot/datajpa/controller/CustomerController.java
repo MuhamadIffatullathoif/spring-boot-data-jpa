@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -44,6 +46,8 @@ public class CustomerController {
     private CustomerService customerService;
     @Autowired
     private UploadFileService uploadFileService;
+    @Autowired
+    MessageSource messageSource;
     private final static String UPLOADS_FOLDER = "uploads";
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -88,7 +92,7 @@ public class CustomerController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     @GetMapping({"/list", "/"})
-    public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model, Authentication authentication, HttpServletRequest request) {
+    public String list(@RequestParam(value = "page", defaultValue = "0") int page, Model model, Authentication authentication, HttpServletRequest request, Locale locale) {
         if (authentication != null) {
             logger.info("Hello authenticated user, your username is".concat(authentication.getName()));
         }
@@ -122,7 +126,7 @@ public class CustomerController {
         // implement Paginator custom
         Page<Customer> customers = customerService.findAll(pageRequest);
         PageRender<Customer> pageRender = new PageRender<Customer>("/list", customers);
-        model.addAttribute("title", "List of customers");
+        model.addAttribute("title", messageSource.getMessage("text.customer.title", null, locale));
         model.addAttribute("customers", customers);
         model.addAttribute("page", pageRender);
         // model.addAttribute("customers", customerService.findAll(pageRequest));
