@@ -9,6 +9,7 @@
         <div class="card-body">
             <h4 class="card-title">
                 <a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary" th:href="@{/form}">Create Customer</a>
+                <a th:href="@{'/list'(format=csv)}">CSV</a>
             </h4>
             <table class="table table-striped">
                 <thead>
