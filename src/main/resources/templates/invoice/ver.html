@@ -8,6 +8,7 @@
     <h4>
         <a th:href="@{'/ver/'+ ${invoice.customer.id}}">&laquo; back</a>
         <a th:href="@{'/invoice/ver/'+ ${invoice.id}(format=pdf)}">PDF</a>
+        <a th:href="@{'/invoice/ver/'+ ${invoice.id}(format=xlsx)}">XLS</a>
     </h4>
     <ul>
         <li th:text="'Data Customer'"></li>
