@@ -2,6 +2,7 @@ package com.example.springboot.datajpa.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -74,6 +75,7 @@ public class Invoice implements Serializable {
         this.createdAt = createdAt;
     }
 
+    @XmlTransient
     public Customer getCustomer() {
         return customer;
     }

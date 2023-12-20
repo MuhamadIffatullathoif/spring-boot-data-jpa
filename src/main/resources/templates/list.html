@@ -10,6 +10,7 @@
             <h4 class="card-title">
                 <a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary" th:href="@{/form}">Create Customer</a>
                 <a th:href="@{'/list'(format=csv)}">CSV</a>
+                <a th:href="@{'/list'(format=xml)}">XML</a>
             </h4>
             <table class="table table-striped">
                 <thead>
@@ -34,13 +35,13 @@
                     <td th:text="${customer.email}"></td>
                     <td th:text="${customer.createdAt}"></td>
                     <td sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a class="btn btn-success btn-sm" th:href="@{/invoice/form/}+${customer.id}" th:text="'Create invoice'"></a>
+                        <a class="btn btn-success btn-sm" th:href="@{'/invoice/form/'+${customer.id}}" th:text="'Create invoice'"></a>
                     </td>
                     <td sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a class="btn btn-primary btn-sm" th:href="@{/form/}+${customer.id}" th:text="'Edit'"></a>
+                        <a class="btn btn-primary btn-sm" th:href="@{'/form/'+${customer.id}}" th:text="'Edit'"></a>
                     </td>
                     <td sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a class="btn btn-danger btn-sm" th:href="@{/delete/}+${customer.id}" th:text="'Delete'"></a>
+                        <a class="btn btn-danger btn-sm" th:href="@{'/delete/'+${customer.id}}" th:text="'Delete'"></a>
                     </td>
                 </tr>
                 </tbody>
