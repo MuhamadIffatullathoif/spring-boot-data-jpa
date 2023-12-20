@@ -11,6 +11,7 @@
                 <a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary" th:href="@{/form}">Create Customer</a>
                 <a th:href="@{'/list'(format=csv)}">CSV</a>
                 <a th:href="@{'/list'(format=xml)}">XML</a>
+                <a th:href="@{'/list'(format=json)}">JSON</a>
             </h4>
             <table class="table table-striped">
                 <thead>

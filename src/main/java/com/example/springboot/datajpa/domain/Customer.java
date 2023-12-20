@@ -1,5 +1,6 @@
 package com.example.springboot.datajpa.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -35,6 +36,7 @@ public class Customer implements Serializable {
     private String photo;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Invoice> invoices;
 
     @Serial

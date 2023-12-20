@@ -1,5 +1,6 @@
 package com.example.springboot.datajpa.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.xml.bind.annotation.XmlTransient;
@@ -27,6 +28,7 @@ public class Invoice implements Serializable {
     private Date createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Customer customer;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
